@@ -5,9 +5,9 @@ ArrayList<String> axisLabels;
 ArrayList<Axis> axes;
 
 // Constants
-String PATH = "../Data/cars-cleaned.tsv";
+String PATH = "../Data/cameras-cleaned.tsv";
 int AXIS_Y = 500;
-int AXIS_HEIGHT = 300;
+int AXIS_HEIGHT = 400;
 int PLOT_X = 100;
 int PLOT_Y = 25;
 int PLOT_WIDTH = 1400;
@@ -35,12 +35,17 @@ void drawAxes() {
   int axisX = PLOT_X;
   int axisY = PLOT_Y + AXIS_HEIGHT; // Axis is anchord by bottom coordinate
   int axisSpacing = PLOT_WIDTH / axisLabels.size();
-  
+  boolean labelStagger = false;
   for (String axisLabel: axisLabels) {
    
-    Axis axis = new Axis(axisX, axisY, AXIS_HEIGHT, axisLabel, 0, (int) getMaxValue(axisLabel));
+    Axis axis = new Axis(axisX, axisY, AXIS_HEIGHT, axisLabel, 0, (int) getMaxValue(axisLabel), labelStagger);
     axes.add(axis);
     axisX += axisSpacing;
+    if (labelStagger == false){
+      labelStagger = true; 
+    } else {
+      labelStagger = false;
+    }
   }
 }
 
@@ -51,6 +56,7 @@ void drawLines() {
     // TODO: Set color of line based on categorical attribute
      stroke(0);
      strokeWeight(1);
+     // whatever command to changeColor(catColorMap.get(item.getCatValue()))
     
      // TODO: Make Line its own class for eventual interaction and highlighting?
      

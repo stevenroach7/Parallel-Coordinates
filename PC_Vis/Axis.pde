@@ -8,9 +8,12 @@ class Axis {
   int max;
   String label;
   int TICKWIDTH = 10;
+  int LABELSTAGGER = 20;
+  boolean staggered;
+  
 
   // Create the Axis
-  Axis(int tempX, int tempY, int tempAxisHeight, String s, int tempMin, int tempMax) {
+  Axis(int tempX, int tempY, int tempAxisHeight, String s, int tempMin, int tempMax, boolean tempStaggered){
     x = tempX;
     y = tempY;
     axisHeight = tempAxisHeight;
@@ -18,6 +21,8 @@ class Axis {
     min = tempMin;
     max = Math.round((tempMax + 5)/ 10.0) * 10; // Round up to nearest 10
     mid = Math.round((min + max)/2);
+    staggered = tempStaggered;
+    
   }
 
   // Display the Axis
@@ -25,11 +30,18 @@ class Axis {
     stroke(0);
     strokeWeight(1);
     textSize(16);
+    textAlign(CENTER, BOTTOM);
+    
 
     // vertical axis line and variable label
     line(x, y, x, y - axisHeight);
-    text(label, x, y + 20);
+    if (staggered){
+      text(label, x, y + LABELSTAGGER*2);
+    } else {
+      text(label, x, y + LABELSTAGGER);
+    }
 
+    textAlign(LEFT, BOTTOM);
     // min tick mark and label
     line(x-TICKWIDTH, y, x+TICKWIDTH, y);
     text(min, x, y);
