@@ -44,8 +44,51 @@ void drawAxes() {
   }
 }
 
+void drawLines() {
+  
+  for (Item item: items) {
+    // TODO: add item filters here 
+     stroke(0);
+     strokeWeight(1);
+    
+     // TODO: Make Line its own class?
+     
+     ArrayList<String> quantKeys = item.getQuantKeys();
+     ArrayList<Float> quantValues = item.getQuantValues();
+     
+     for (int i = 0; i < quantKeys.size() - 1; i++) { // TODO: Optimize this
+        String sourceKey = quantKeys.get(i);
+        float sourceValue = quantValues.get(i);
+        Axis sourceAxis = getAxisFromLabel(sourceKey);
+        float sourceY = getYPosOnAxisFromValue(sourceValue, sourceAxis);
+        
+        String targetKey = quantKeys.get(i + 1);
+        float targetValue = quantValues.get(i + 1);
+        Axis targetAxis = getAxisFromLabel(targetKey);
+        float targetY = getYPosOnAxisFromValue(targetValue, targetAxis);
+        
+        line(sourceAxis.getX(), sourceY, targetAxis.getX(), targetY); 
+     }
+  }
+}
+
+Axis getAxisFromLabel(String label) {
+  for (Axis axis: axes) {
+    if (axis.getLabel().equals(label)) {
+      return axis;
+    }
+  }
+  return null;
+}
+
+float getYPosOnAxisFromValue(float value, Axis axis) {
+  float distance = (value / axis.getMax()) * axis.getAxisHeight();
+  return axis.getY() - distance;
+}
+
 void draw(){
   for (Axis axis: axes) {
     axis.display();
+    drawLines();
   }
 }
