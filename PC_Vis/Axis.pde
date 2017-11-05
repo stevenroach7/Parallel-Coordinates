@@ -4,19 +4,20 @@ class Axis {
   
   int x, y;
   int axisHeight;
-  float min, mid, max;
+  int min, mid;
+  int max;
   String label;
   int TICKWIDTH = 10;
   
   // Create the Axis
-  Axis(int tempX, int tempY, int tempAxisHeight, String s, float tempMin, float tempMax) {
+  Axis(int tempX, int tempY, int tempAxisHeight, String s, int tempMin, int tempMax) {
     x = tempX;
     y = tempY;
     axisHeight = tempAxisHeight;
     label = s;
     min = tempMin;
-    max = tempMax;
-    mid = (min + max)/2;
+    max = Math.round(tempMax/10.0) * 10; // Round up to nearest 10
+    mid = Math.round((min + max)/2);
   }
   
   

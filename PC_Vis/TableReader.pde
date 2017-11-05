@@ -3,6 +3,7 @@
 class TableReader {
 
   String path;
+  Table headerTable;
 
   TableReader(String tempPath) {
     path = tempPath;
@@ -53,4 +54,15 @@ class TableReader {
     }
     return items;
   }
+  
+ float getMaxValue(String headerLabel) {
+   
+   if (headerTable == null) {
+     headerTable = loadTable(path, "header");
+   }
+   headerTable.sort(headerLabel);
+   return headerTable.getFloat(headerTable.getRowCount() - 2, headerLabel); // Have to subtract 2 since last row is variabe types row
+ }
+  
+   
 }
