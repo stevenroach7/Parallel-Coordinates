@@ -4,10 +4,10 @@ class Axis {
 
   int x, y;
   int axisHeight;
-  int min, mid;
+  int min;
   int max;
   String label;
-  int TICKWIDTH = 10;
+  int TICKWIDTH = 8;
   int LABELSTAGGER = 20;
   boolean staggered;
   
@@ -20,7 +20,6 @@ class Axis {
     label = s;
     min = tempMin;
     max = Math.round((tempMax + 5)/ 10.0) * 10; // Round up to nearest 10
-    mid = Math.round((min + max)/2);
     staggered = tempStaggered;
     
   }
@@ -42,13 +41,15 @@ class Axis {
       text(label, x, y + LABELSTAGGER);
     }
 
-    textAlign(LEFT, BOTTOM);
+    textAlign(CENTER, BOTTOM);
     // min tick mark and label
     line(x-TICKWIDTH, y, x+TICKWIDTH, y);
-    text(min, x, y);
+    text(min, x + TICKWIDTH, y);
 
-    // mid tick mark
-    line(x-TICKWIDTH, y - axisHeight/2, x+TICKWIDTH, y - axisHeight/2);
+    // intermediate tick marks
+    line(x-TICKWIDTH, y - axisHeight * 0.25, x+TICKWIDTH, y - axisHeight * 0.25);
+    line(x-TICKWIDTH, y - axisHeight * 0.5, x+TICKWIDTH, y - axisHeight * 0.5);
+    line(x-TICKWIDTH, y - axisHeight * 0.75, x+TICKWIDTH, y - axisHeight * 0.75);
 
     // max tick mark and label
     line(x-TICKWIDTH, y - axisHeight, x+TICKWIDTH, y - axisHeight);
