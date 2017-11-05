@@ -19,7 +19,7 @@ class TableReader {
     TableRow varTypes = table.getRow(1); // Second row should be labels of type of variable in column
 
     ArrayList<Item> items = new ArrayList();
-    for (int i = 1; i < table.getRowCount(); i++) {
+    for (int i = 2; i < table.getRowCount(); i++) {
 
       TableRow row = table.getRow(i);
       
