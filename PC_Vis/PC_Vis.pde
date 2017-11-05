@@ -3,11 +3,13 @@ TableReader tableReader;
 ArrayList<Item> items;
 ArrayList<String> axisLabels;
 ArrayList<Axis> axes;
+HashMap<String, Integer> colorMap;
+
 
 // Constants
 String PATH = "../Data/cameras-cleaned.tsv";
 int AXIS_Y = 500;
-int AXIS_HEIGHT = 400;
+int AXIS_HEIGHT = 700;
 int PLOT_X = 100;
 int PLOT_Y = 25;
 int PLOT_WIDTH = 1400;
@@ -27,11 +29,27 @@ void loadData() {
   items = tableReader.parseTable();
   
   axisLabels = items.get(0).getQuantKeys();
+  int[] distinctColors = {#9BC4E5,#310106,#04640D,#FEFB0A,#FB5514,#E115C0,#00587F,
+    #0BC582,#FEB8C8,#9E8317,#01190F,#847D81,#58018B,#B70639,#703B01,#F7F1DF,#118B8A,
+    #4AFEFA,#FCB164,#796EE6,#000D2C,#53495F,#F95475,#61FC03,#5D9608,#DE98FD};
+  colorMap = createColorMap(distinctColors);
+}
+
+HashMap<String, Integer> createColorMap(int[] distinctColors) {
+  HashMap<String, Integer> colorMap = new HashMap();
+  int nextColorIndex = 0;
+  for (Item item: items){
+    String currentVal = item.getCatValue();
+    if (!colorMap.containsKey(currentVal)) {
+      colorMap.put(currentVal, distinctColors[nextColorIndex]);
+      nextColorIndex++;
+    }
+  }
+  return colorMap;
 }
 
 void drawAxes() {
   axes = new ArrayList();
-  
   int axisX = PLOT_X;
   int axisY = PLOT_Y + AXIS_HEIGHT; // Axis is anchord by bottom coordinate
   int axisSpacing = PLOT_WIDTH / axisLabels.size();
@@ -41,20 +59,16 @@ void drawAxes() {
     Axis axis = new Axis(axisX, axisY, AXIS_HEIGHT, axisLabel, 0, (int) getMaxValue(axisLabel), labelStagger);
     axes.add(axis);
     axisX += axisSpacing;
-    if (labelStagger == false){
-      labelStagger = true; 
-    } else {
-      labelStagger = false;
-    }
+    labelStagger = !labelStagger;
   }
 }
 
 void drawLines() {
-  
   for (Item item: items) {
+    
     // TODO: add item filters here
     // TODO: Set color of line based on categorical attribute
-     stroke(0);
+     stroke(colorMap.get(item.getCatValue()));
      strokeWeight(1);
      // whatever command to changeColor(catColorMap.get(item.getCatValue()))
     
