@@ -51,6 +51,7 @@ class Axis {
     line(x-TICKWIDTH, y - axisHeight * 0.5, x+TICKWIDTH, y - axisHeight * 0.5);
     line(x-TICKWIDTH, y - axisHeight * 0.75, x+TICKWIDTH, y - axisHeight * 0.75);
 
+
     // max tick mark and label
     line(x-TICKWIDTH, y - axisHeight, x+TICKWIDTH, y - axisHeight);
     text(max, x, y - axisHeight);
