@@ -9,13 +9,13 @@ class Item {
   String catKey;
   String catValue;
   
-  Item(String nameKey, String nameValue, ArrayList<String> quantKeys, ArrayList<Float> quantValues, String catKey, String catValue) {
-    this.nameKey = nameKey;
-    this.nameValue = nameValue;
-    this.quantKeys = quantKeys;
-    this.quantValues = quantValues;
-    this.catKey = catKey;
-    this.catValue = catValue;
+  Item(String tempNameKey, String tempNameValue, ArrayList<String> tempQuantKeys, ArrayList<Float> tempQuantValues, String tempCatKey, String tempCatValue) {
+    nameKey = tempNameKey;
+    nameValue = tempNameValue;
+    quantKeys = tempQuantKeys;
+    quantValues = tempQuantValues;
+    catKey = tempCatKey;
+    catValue = tempCatValue;
   }
   
   String getNameKey() {

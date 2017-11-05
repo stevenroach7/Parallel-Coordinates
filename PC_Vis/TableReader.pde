@@ -4,8 +4,8 @@ class TableReader {
 
   String path;
 
-  TableReader(String path) {
-    this.path = path;
+  TableReader(String tempPath) {
+    path = tempPath;
   }
 
   ArrayList<Item> parseTable() {

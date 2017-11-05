@@ -1,19 +1,28 @@
+// Globals
 Table dataTable;
-String dataSetName;
 Axis exampleAxis;
 ArrayList<Item> items;
 
+// Constants
+int AXIS_X = 100;
+int AXIS_Y = 500;
+int AXIS_HEIGHT = 300;
+
+
 void setup() {
-  size(1000, 1000);
-  TableReader tableReader = new TableReader("../Data/cars-cleaned.tsv");
-  items = tableReader.parseTable();
+  // Adjust canvas
+  size(1500, 750);
+  pixelDensity(displayDensity());
+  
   loadData();
+  
+  // Position canvas elements
+  exampleAxis = new Axis(100, 500, AXIS_HEIGHT, "example", 0, 500);
 }
 
 void loadData(){
-  dataSetName = "cars-cleaned.tsv";
-  dataTable = loadTable(dataSetName, "header");
-  exampleAxis = new Axis(100, 800, "example", 5.0, 500.0);
+  TableReader tableReader = new TableReader("../Data/cars-cleaned.tsv");
+  items = tableReader.parseTable();
 }
 
 void draw(){
