@@ -1,4 +1,4 @@
-name	mpg	cylinders	displacement	horsepower	weight	acceleration	model year	origin country
+name	mpg	cylinders	displacement	horsepower	weight	acceleration	release year	origin country
 name	quant	quant	quant	quant	quant	quant	quant	cat
 mazda glc	46.6	4	86	65	2110	17.9	80	Japan
 honda civic 1500 gl	44.6	4	91	67	1850	13.8	80	Japan
