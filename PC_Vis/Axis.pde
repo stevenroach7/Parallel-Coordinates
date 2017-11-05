@@ -18,7 +18,7 @@ class Axis {
     y = tempY;
     axisHeight = tempAxisHeight;
     label = s;
-    min = tempMin;
+    min = tempMin - (tempMin % 10); // Round down to nearest 10
     max = Math.round((tempMax + 5)/ 10.0) * 10; // Round up to nearest 10
     mid = Math.round((min + max)/2);
     staggered = tempStaggered;

@@ -5,9 +5,8 @@ ArrayList<String> axisLabels;
 ArrayList<Axis> axes;
 HashMap<String, Integer> colorMap;
 
-
 // Constants
-String PATH = "../Data/cameras-cleaned.tsv";
+String PATH = "../Data/cars-cleaned.tsv";
 int AXIS_Y = 500;
 int AXIS_HEIGHT = 400;
 int PLOT_X = 100;
@@ -20,7 +19,7 @@ void setup() {
   pixelDensity(displayDensity());
   
   loadData();
-   // Draw canvas elements
+  // Draw canvas elements
   drawAxes();
 }
 
@@ -56,7 +55,12 @@ void drawAxes() {
   boolean labelStagger = false;
   for (String axisLabel: axisLabels) {
    
-    Axis axis = new Axis(axisX, axisY, AXIS_HEIGHT, axisLabel, 0, (int) getMaxValue(axisLabel), labelStagger);
+    int minValue = 0;
+    if (axisLabel.toLowerCase().equals("release year")) { // Special exception: axis min shouldn't be zero for year attribute
+      minValue = (int) getMinValue(axisLabel);
+    }
+    
+    Axis axis = new Axis(axisX, axisY, AXIS_HEIGHT, axisLabel, minValue, (int) getMaxValue(axisLabel), labelStagger);
     axes.add(axis);
     axisX += axisSpacing;
     labelStagger = !labelStagger;
@@ -67,10 +71,8 @@ void drawLines() {
   for (Item item: items) {
     
     // TODO: add item filters here
-    // TODO: Set color of line based on categorical attribute
      stroke(colorMap.get(item.getCatValue()));
      strokeWeight(1);
-     // whatever command to changeColor(catColorMap.get(item.getCatValue()))
     
      // TODO: Make Line its own class for eventual interaction and highlighting?
      
@@ -107,7 +109,7 @@ Axis getAxisFromLabel(String label) {
 }
 
 float getYPosOnAxisFromValue(float value, Axis axis) {
-  float distance = (value / axis.getMax()) * axis.getAxisHeight();
+  float distance = ((value - axis.getMin()) / (axis.getMax() - axis.getMin())) * axis.getAxisHeight();
   return axis.getY() - distance;
 }
 
@@ -123,6 +125,19 @@ float getMaxValue(String label) {
     }
   }
   return maxValue;
+}
+
+float getMinValue(String label) {
+  int itemsIndex = items.get(0).getQuantKeys().indexOf(label);
+  float minValue = 10000000;
+  
+  for (int i = 0; i < items.size(); i++) {
+    float itemValue = items.get(i).getQuantValues().get(itemsIndex);
+    if (itemValue < minValue) {
+      minValue = itemValue;
+    }
+  }
+  return minValue;
 }
 
 void draw(){
