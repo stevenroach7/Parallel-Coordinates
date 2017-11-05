@@ -30,6 +30,7 @@ class Axis {
     stroke(0);
     strokeWeight(1);
     textSize(16);
+    fill(0);
     textAlign(CENTER, BOTTOM);
     
 
@@ -46,9 +47,8 @@ class Axis {
     line(x-TICKWIDTH, y, x+TICKWIDTH, y);
     text(min, x, y);
 
-    // mid tick mark and label
+    // mid tick mark
     line(x-TICKWIDTH, y - axisHeight/2, x+TICKWIDTH, y - axisHeight/2);
-    text(mid, x, y - axisHeight/2);
 
     // max tick mark and label
     line(x-TICKWIDTH, y - axisHeight, x+TICKWIDTH, y - axisHeight);

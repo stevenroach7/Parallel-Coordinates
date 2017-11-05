@@ -9,7 +9,7 @@ HashMap<String, Integer> colorMap;
 // Constants
 String PATH = "../Data/cameras-cleaned.tsv";
 int AXIS_Y = 500;
-int AXIS_HEIGHT = 700;
+int AXIS_HEIGHT = 400;
 int PLOT_X = 100;
 int PLOT_Y = 25;
 int PLOT_WIDTH = 1400;
@@ -21,7 +21,7 @@ void setup() {
   
   loadData();
    // Draw canvas elements
-   drawAxes();
+  drawAxes();
 }
 
 void loadData() {
@@ -126,6 +126,7 @@ float getMaxValue(String label) {
 }
 
 void draw(){
+  background(#FFFFFF);
   for (Axis axis: axes) {
     axis.display();
   }
