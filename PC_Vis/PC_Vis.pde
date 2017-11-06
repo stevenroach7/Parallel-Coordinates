@@ -166,21 +166,32 @@ float getMinValue(String label) {
   return minValue;
 }
 
+
 // Interaction methods
 
-//void mouseMoved() {
-//   for (Group group: groups) {
-//      if (group.isPosInsideLabel(mouseX, mouseY)) {
-//         filterLinesByGroup(group.getLabel());
-//      }
-//   }
-//}
+void mouseMoved() {
+   resetLines();
+   for (Group group: groups) {
+      if (group.isPosInsideLabel(mouseX, mouseY)) {
+         filterLinesByGroup(group.getLabel());
+      }
+   }
+}
 
 void filterLinesByGroup(String groupLabel) {
   for (Line line: lines) {
-    line.setIsDisplayed(groupLabel.equals(line.getItem().getCatValue()));
+    if (!groupLabel.equals(line.getItem().getCatValue())) {
+      line.setIsDisplayed(false);
+    }
   }
 }
+
+void resetLines() {
+  for (Line line: lines) {
+    line.setIsDisplayed(true);
+  }
+}
+
 
 // Draw Method
 

@@ -2,6 +2,8 @@
 
 class Group {
   
+  int CHAR_WIDTH = 11;
+  int CHAR_HEIGHT = 20;
   int x;
   int y;
   String label;
@@ -19,8 +21,12 @@ class Group {
   }
  
   boolean isPosInsideLabel(float posX, float posY) {
-    // TODO: Write this method
-    return true;
+    if (posX >= x && posX <= x + (label.length() * CHAR_WIDTH)) {
+      if (posY <= y && posY >= (y - CHAR_HEIGHT)) {
+        return true;
+      }
+    }
+    return false;
   }
   
   void display() {
@@ -28,5 +34,8 @@ class Group {
     textSize(18);
     fill(colorHex);
     text(label, x, y);
+    
+    // Debug Rect
+    //rect(x,y-CHAR_HEIGHT,(label.length() * CHAR_WIDTH), CHAR_HEIGHT);
   }
 }
