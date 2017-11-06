@@ -13,6 +13,13 @@ int AXIS_HEIGHT = 400;
 int PLOT_X = 100;
 int PLOT_Y = 25;
 int PLOT_WIDTH = 1400;
+int Y_STAGGER = 20;
+
+// Colors
+// Array of pregenerated distinct CIELab colors from https://stackoverflow.com/questions/309149/generate-distinctly-different-rgb-colors-in-graphs
+int[] distinctColors = {#9BC4E5,#310106,#04640D,#FEFB0A,#FB5514,#E115C0,#00587F,
+  #0BC582,#FEB8C8,#9E8317,#01190F,#847D81,#58018B,#B70639,#703B01,#118B8A,
+  #4AFEFA,#FCB164,#796EE6,#000D2C,#53495F,#F95475,#61FC03,#5D9608,#DE98FD};
 
 void setup() {
   // Adjust canvas
@@ -20,8 +27,9 @@ void setup() {
   pixelDensity(displayDensity());
   
   loadData();
-  // Draw canvas elements
+  // Create canvas elements
   createAxes();
+  createColorMap();
   createLines();
 }
 
@@ -30,14 +38,13 @@ void loadData() {
   items = tableReader.parseTable();
   
   axisLabels = items.get(0).getQuantKeys();
-  int[] distinctColors = {#9BC4E5,#310106,#04640D,#FEFB0A,#FB5514,#E115C0,#00587F,
-    #0BC582,#FEB8C8,#9E8317,#01190F,#847D81,#58018B,#B70639,#703B01,#F7F1DF,#118B8A,
-    #4AFEFA,#FCB164,#796EE6,#000D2C,#53495F,#F95475,#61FC03,#5D9608,#DE98FD};
-  colorMap = createColorMap(distinctColors);
 }
 
-HashMap<String, Integer> createColorMap(int[] distinctColors) {
-  HashMap<String, Integer> colorMap = new HashMap();
+
+// Data Structure Creation Methods
+
+void createColorMap() {
+  colorMap = new HashMap();
   int nextColorIndex = 0;
   for (Item item: items){
     String currentVal = item.getCatValue();
@@ -46,7 +53,6 @@ HashMap<String, Integer> createColorMap(int[] distinctColors) {
       nextColorIndex++;
     }
   }
-  return colorMap;
 }
 
 void createAxes() {
@@ -90,6 +96,38 @@ void createLines() {
   
 }
 
+
+// Drawing Methods
+
+void drawGroups(){
+  // loop for drawing group names
+  // Using an enhanced loop to interate over each entry
+  String currentGroup = "";
+  int currentColor = 0;
+  int heightAdjust = 0;
+  textAlign(LEFT, BOTTOM);
+  textSize(18);
+  int xPos = PLOT_X;
+  
+  int i = 0;
+  for (HashMap.Entry group : colorMap.entrySet()) {
+    currentGroup = group.getKey().toString();
+    currentColor = (int) group.getValue();
+    fill(currentColor);
+    text(currentGroup, xPos, height - heightAdjust);
+    heightAdjust += Y_STAGGER;
+
+    if (i == 9) { // Hacky way of creating multiple columns
+      xPos += 100;
+      heightAdjust = 0;
+    }
+    i++;
+  }
+}
+
+
+// Helper Methods
+
 Axis getAxisFromLabel(String label) {
   for (Axis axis: axes) {
     if (axis.getLabel().equals(label)) {
@@ -131,6 +169,9 @@ float getMinValue(String label) {
   return minValue;
 }
 
+
+// Draw Method
+
 void draw(){
   background(#FFFFFF);
   for (Axis axis: axes) {
@@ -139,4 +180,5 @@ void draw(){
   for (Line line: lines) {
     line.display();
   }
+  drawGroups();
 }
