@@ -96,6 +96,10 @@ class Axis {
     return max;
   }
   
+  void setStaggered(boolean tempStaggered) {
+    staggered = tempStaggered;
+  }
+  
   boolean getIsBeingDragged() {
     return isBeingDragged;
   }

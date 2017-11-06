@@ -221,11 +221,14 @@ void reorderAxes(int prevIndex, Axis draggedAxis) {
   }
   
   // Reposition axes
+  boolean labelStagger = false;
   for (int i = 0; i < axes.size(); i++) {
     Axis axis = axes.get(i);
     axis.setX(axisXPositions.get(i));
     axis.setY(PLOT_Y + AXIS_HEIGHT);
     axis.setIsBeingDragged(false);
+    axis.setStaggered(labelStagger);
+    labelStagger = !labelStagger;
   }
   repositionLinesFromAxes();
 }
