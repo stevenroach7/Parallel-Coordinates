@@ -6,16 +6,17 @@ ArrayList<Axis> axes;
 HashMap<String, Integer> colorMap;
 
 // Constants
-String PATH = "../Data/cars-cleaned.tsv";
+String PATH = "../Data/cameras-cleaned.tsv";
 int AXIS_Y = 500;
 int AXIS_HEIGHT = 400;
 int PLOT_X = 100;
 int PLOT_Y = 25;
 int PLOT_WIDTH = 1400;
+int Y_STAGGER = 20;
 
 void setup() {
   // Adjust canvas
-  size(1500, 750);
+  size(1500, 900);
   pixelDensity(displayDensity());
   
   loadData();
@@ -28,8 +29,9 @@ void loadData() {
   items = tableReader.parseTable();
   
   axisLabels = items.get(0).getQuantKeys();
+  //Array of pregenerated distinct CIELab colors from https://stackoverflow.com/questions/309149/generate-distinctly-different-rgb-colors-in-graphs
   int[] distinctColors = {#9BC4E5,#310106,#04640D,#FEFB0A,#FB5514,#E115C0,#00587F,
-    #0BC582,#FEB8C8,#9E8317,#01190F,#847D81,#58018B,#B70639,#703B01,#F7F1DF,#118B8A,
+    #0BC582,#FEB8C8,#9E8317,#01190F,#847D81,#58018B,#B70639,#703B01,#118B8A,
     #4AFEFA,#FCB164,#796EE6,#000D2C,#53495F,#F95475,#61FC03,#5D9608,#DE98FD};
   colorMap = createColorMap(distinctColors);
 }
@@ -44,6 +46,7 @@ HashMap<String, Integer> createColorMap(int[] distinctColors) {
       nextColorIndex++;
     }
   }
+  print(colorMap.get("Samsung"));
   return colorMap;
 }
 
@@ -99,6 +102,23 @@ void drawLines() {
   }
 }
 
+void drawGroups(){
+  //loop for drawing group names
+  // Using an enhanced loop to interate over each entry
+  String currentGroup = "";
+  int currentColor = 0;
+  int heightAdjust = 0;
+  textAlign(LEFT, BOTTOM);
+  textSize(18);
+  for (HashMap.Entry group : colorMap.entrySet()) {
+    currentGroup = group.getKey().toString();
+    currentColor = (int) group.getValue();
+    fill(currentColor);
+    text(currentGroup, PLOT_X, height - heightAdjust);
+    heightAdjust += Y_STAGGER;
+  }
+}
+
 Axis getAxisFromLabel(String label) {
   for (Axis axis: axes) {
     if (axis.getLabel().equals(label)) {
@@ -146,4 +166,5 @@ void draw(){
     axis.display();
   }
   drawLines();
+  drawGroups();
 }
