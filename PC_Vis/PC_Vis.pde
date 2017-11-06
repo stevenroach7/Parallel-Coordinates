@@ -25,7 +25,7 @@ int[] distinctColors = {#9BC4E5,#310106,#04640D,#FEFB0A,#FB5514,#E115C0,#00587F,
 
 void setup() {
   // Adjust canvas
-  size(1500, 750);
+  size(1500, 750, P2D);
   pixelDensity(displayDensity());
   
   loadData();
