@@ -2,12 +2,14 @@
 
 class Line {
   
+  Item item;
   ArrayList<Position> positions;
   int colorHex;
-   boolean isDisplayed;
-   boolean isThicker;
+  boolean isDisplayed;
+  boolean isThicker;
   
-  Line(ArrayList<Position> tempPositions, int tempColorHex) {
+  Line(Item tempItem, ArrayList<Position> tempPositions, int tempColorHex) {
+    item = tempItem;
     positions = tempPositions;
     colorHex = tempColorHex;
     isDisplayed = true;
@@ -15,9 +17,12 @@ class Line {
   }
   
   void setIsDisplayed(boolean tempIsDisplayed) {
-    isDisplayed = tempIsDisplayed;
+     isDisplayed = tempIsDisplayed;
   }
   
+  Item getItem() {
+    return item;
+  }
   
   void display() {
     

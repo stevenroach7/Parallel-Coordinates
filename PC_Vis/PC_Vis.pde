@@ -4,6 +4,7 @@ ArrayList<Item> items;
 ArrayList<String> axisLabels;
 ArrayList<Axis> axes;
 ArrayList<Line> lines;
+ArrayList<Group> groups;
 HashMap<String, Integer> colorMap;
 
 // Constants
@@ -31,6 +32,7 @@ void setup() {
   createAxes();
   createColorMap();
   createLines();
+  createGroups();
 }
 
 void loadData() {
@@ -91,32 +93,27 @@ void createLines() {
         positions.add(new Position(axis.getX(), getYPosOnAxisFromValue(quantValue, axis)));
     }
     int colorHex = colorMap.get(item.getCatValue());
-    lines.add(new Line(positions, colorHex));
+    lines.add(new Line(item, positions, colorHex));
   }
   
 }
 
-
-// Drawing Methods
-
-void drawGroups(){
+void createGroups(){
   // loop for drawing group names
   // Using an enhanced loop to interate over each entry
-  String currentGroup = "";
-  int currentColor = 0;
+  String currentGroup;
+  int currentColor;
   int heightAdjust = 0;
-  textAlign(LEFT, BOTTOM);
-  textSize(18);
   int xPos = PLOT_X;
   
   int i = 0;
+  groups = new ArrayList();
   for (HashMap.Entry group : colorMap.entrySet()) {
     currentGroup = group.getKey().toString();
     currentColor = (int) group.getValue();
-    fill(currentColor);
-    text(currentGroup, xPos, height - heightAdjust);
+    groups.add(new Group(xPos, height-heightAdjust, currentGroup, currentColor));
+    
     heightAdjust += Y_STAGGER;
-
     if (i == 9) { // Hacky way of creating multiple columns
       xPos += 100;
       heightAdjust = 0;
@@ -169,6 +166,21 @@ float getMinValue(String label) {
   return minValue;
 }
 
+// Interaction methods
+
+//void mouseMoved() {
+//   for (Group group: groups) {
+//      if (group.isPosInsideLabel(mouseX, mouseY)) {
+//         filterLinesByGroup(group.getLabel());
+//      }
+//   }
+//}
+
+void filterLinesByGroup(String groupLabel) {
+  for (Line line: lines) {
+    line.setIsDisplayed(groupLabel.equals(line.getItem().getCatValue()));
+  }
+}
 
 // Draw Method
 
@@ -180,5 +192,7 @@ void draw(){
   for (Line line: lines) {
     line.display();
   }
-  drawGroups();
+  for (Group group: groups) {
+    group.display();
+  }
 }
