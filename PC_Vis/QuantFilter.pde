@@ -2,22 +2,34 @@
 
 class QuantFilter {
   
-  String label;
-  float minValue;
-  float maxValue;
+  float fixedValue;
+  float movingValue;
   
-  QuantFilter(String tempLabel, float tempMinValue, float tempMaxValue) {
-    label = tempLabel;
-    minValue = tempMinValue;
-    maxValue = tempMaxValue;
-  }
-  
-  String getLabel() {
-    return label;
+  QuantFilter(float tempMinValue, float tempMaxValue) {
+    fixedValue = tempMinValue;
+    movingValue = tempMaxValue;
   }
   
   boolean isValueInRange(float value) {
+    float minValue = min(fixedValue, movingValue);
+    float maxValue = max(fixedValue, movingValue);
     return (value >= minValue && value <= maxValue);
+  }
+  
+  float getFixedValue() {
+    return fixedValue;
+  }
+  
+  void setFixedValue(float tempFixedValue) {
+    fixedValue = tempFixedValue;
+  }
+  
+  float getMovingValue() {
+    return movingValue;
+  }
+  
+  void setMovingValue(float tempMovingValue) {
+    movingValue = tempMovingValue;
   }
   
 }

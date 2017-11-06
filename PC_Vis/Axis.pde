@@ -10,6 +10,7 @@ class Axis {
   boolean staggered;
   boolean isBeingDragged;
   float dragOffsetY;
+  boolean isFilterBeingDragged;
   QuantFilter quantFilter;
   
   int TICKWIDTH = 8;
@@ -27,6 +28,7 @@ class Axis {
     staggered = tempStaggered;
     isBeingDragged = false;
     dragOffsetY = 0;
+    isFilterBeingDragged = false;
   }
 
   // Display the Axis
@@ -63,8 +65,24 @@ class Axis {
     line(x-TICKWIDTH, y - axisHeight, x+TICKWIDTH, y - axisHeight);
     text(max, x, y - axisHeight);
     
+    // draw filter
+    if (quantFilter != null) {
+      float fixedValue = quantFilter.getFixedValue();
+      float movingValue = quantFilter.getMovingValue();
+      float yMinPos = getYPosOnAxisFromValue(min(fixedValue, movingValue));
+      float yMaxPos = getYPosOnAxisFromValue(max(fixedValue, movingValue));
+      rect(x - CLICKABLE_WIDTH/2, yMaxPos, CLICKABLE_WIDTH, yMinPos - yMaxPos);
+    }
+    
     // Debug Rect
     //rect(x - CLICKABLE_WIDTH/2, y-axisHeight, CLICKABLE_WIDTH, axisHeight);
+  }
+
+
+  
+  float getYPosOnAxisFromValue(float value) {
+    float distance = ((value - min) / (max - min)) * axisHeight;
+    return y - distance;
   }
 
   int getX() {
@@ -111,6 +129,14 @@ class Axis {
     isBeingDragged = tempIsBeingDragged;
   }
   
+  boolean getIsFilterBeingDragged() {
+    return isFilterBeingDragged;
+  }
+  
+  void setIsFilterBeingDragged(boolean tempIsFilterBeingDragged) {
+    isFilterBeingDragged = tempIsFilterBeingDragged;
+  }
+  
   float getDragOffsetY() {
     return dragOffsetY;
   }
@@ -137,6 +163,15 @@ class Axis {
         if (posY >= y + LABELSTAGGER  && posY <= (y + (2 * LABELSTAGGER))) {
           return true;
         }
+      }
+    }
+    return false;
+  }
+  
+  boolean isPosInsideAxis(float posX, float posY) {
+    if (posX >= x - (CLICKABLE_WIDTH / 2) && posX <= x + (CLICKABLE_WIDTH / 2)) {
+      if (posY <= y && posY >= (y - axisHeight)) {
+        return true;
       }
     }
     return false;
