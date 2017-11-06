@@ -239,7 +239,7 @@ int getAxisIndexFromXPosition(float xPos) {
         return i;
       }
     }
-    return axisXPositions.size() - 1;
+    return axisXPositions.size();
 }
 
 void repositionLinesFromAxes() {

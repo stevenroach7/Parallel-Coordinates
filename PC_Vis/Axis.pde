@@ -10,6 +10,7 @@ class Axis {
   boolean staggered;
   boolean isBeingDragged;
   float dragOffsetY;
+  QuantFilter quantFilter;
   
   int TICKWIDTH = 8;
   int LABELSTAGGER = 20;
@@ -116,6 +117,14 @@ class Axis {
   
  void setDragOffsetY(float tempOffsetY) {
     dragOffsetY = tempOffsetY;
+  }
+  
+  QuantFilter getQuantFilter() {
+    return quantFilter;
+  }
+  
+  void setQuantFilter(QuantFilter tempQuantFilter) {
+    quantFilter = tempQuantFilter;
   }
   
   boolean isPosInsideMoveButton(float posX, float posY) {
