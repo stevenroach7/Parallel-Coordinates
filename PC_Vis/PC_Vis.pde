@@ -3,6 +3,7 @@ TableReader tableReader;
 ArrayList<Item> items;
 ArrayList<String> axisLabels;
 ArrayList<Axis> axes;
+ArrayList<Integer> axisXPositions;
 ArrayList<Line> lines;
 ArrayList<Group> groups;
 HashMap<String, Integer> colorMap;
@@ -59,8 +60,9 @@ void createColorMap() {
 
 void createAxes() {
   axes = new ArrayList();
+  axisXPositions = new ArrayList();
   int axisX = PLOT_X;
-  int axisY = PLOT_Y + AXIS_HEIGHT; // Axis is anchord by bottom coordinate
+  int axisY = PLOT_Y + AXIS_HEIGHT; // Axis is anchored by bottom coordinate
   int axisSpacing = PLOT_WIDTH / axisLabels.size();
   boolean labelStagger = false;
   for (String axisLabel: axisLabels) {
@@ -72,6 +74,7 @@ void createAxes() {
     
     Axis axis = new Axis(axisX, axisY, AXIS_HEIGHT, axisLabel, minValue, (int) getMaxValue(axisLabel), labelStagger);
     axes.add(axis);
+    axisXPositions.add(axisX);
     axisX += axisSpacing;
     labelStagger = !labelStagger;
   }
@@ -95,7 +98,6 @@ void createLines() {
     int colorHex = colorMap.get(item.getCatValue());
     lines.add(new Line(item, positions, colorHex));
   }
-  
 }
 
 void createGroups(){
@@ -169,6 +171,35 @@ float getMinValue(String label) {
 
 // Interaction methods
 
+void mousePressed() {
+  for (Axis axis : axes) {
+    if (axis.isPosInsideAxis(mouseX, mouseY)) {
+      axis.isBeingDragged = true;
+      axis.setDragOffsetY(mouseY - axis.getY());
+    }
+  }
+}
+
+void mouseDragged() {
+  for (Axis axis : axes) {
+    if (axis.isBeingDragged) {
+      axis.setX(mouseX);
+      axis.setY((int) (mouseY - axis.getDragOffsetY()));
+      repositionLinesFromAxes();
+    }
+  }
+  
+}
+
+void mouseReleased() {
+  for (int i = 0; i < axes.size(); i++) {
+    Axis axis = axes.get(i);
+    if (axis.isBeingDragged) {
+      reorderAxes(i, axis);
+    }
+  }
+}
+
 void mouseMoved() {
    resetLines();
    for (Group group: groups) {
@@ -189,6 +220,48 @@ void filterLinesByGroup(String groupLabel) {
 void resetLines() {
   for (Line line: lines) {
     line.setIsDisplayed(true);
+  }
+}
+
+void reorderAxes(int prevIndex, Axis draggedAxis) {
+  
+  int newIndex = getAxisIndexFromXPosition(draggedAxis.getX());
+  axes.remove(prevIndex);
+  
+  if (newIndex <= prevIndex) { 
+    axes.add(newIndex, draggedAxis);
+  } else { // If new index is after previous index, removing axis in previous step will affect indices of all axes after
+    axes.add(newIndex - 1, draggedAxis);
+  }
+  
+  // Reposition axes
+  for (int i = 0; i < axes.size(); i++) {
+    Axis axis = axes.get(i);
+    axis.setX(axisXPositions.get(i));
+    axis.setY(PLOT_Y + AXIS_HEIGHT);
+    axis.setIsBeingDragged(false);
+  }
+  repositionLinesFromAxes();
+}
+
+int getAxisIndexFromXPosition(float xPos) {
+    for (int i = 0; i < axisXPositions.size(); i++) {
+      if (xPos < axisXPositions.get(i)) {
+        return i;
+      }
+    }
+    return axisXPositions.size() - 1;
+}
+
+void repositionLinesFromAxes() {
+  for (Line line: lines) {
+    ArrayList<Position> positions = new ArrayList();
+    for (Axis axis: axes) {
+        int quantValuesIndex = line.item.getQuantKeys().indexOf(axis.label); // TODO: Maybe store map in Item so we don't have to search here.
+        float quantValue = line.item.getQuantValues().get(quantValuesIndex);
+        positions.add(new Position(axis.getX(), getYPosOnAxisFromValue(quantValue, axis)));
+    }
+    line.setPositions(positions);
   }
 }
 

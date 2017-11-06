@@ -24,6 +24,10 @@ class Line {
     return item;
   }
   
+  void setPositions(ArrayList<Position> tempPositions) {
+    positions = tempPositions;
+  }
+  
   void display() {
     
     if (isDisplayed) {

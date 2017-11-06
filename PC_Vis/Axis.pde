@@ -4,24 +4,28 @@ class Axis {
 
   int x, y;
   int axisHeight;
+  String label;
   int min;
   int max;
-  String label;
+  boolean staggered;
+  boolean isBeingDragged;
+  float dragOffsetY;
+  
   int TICKWIDTH = 8;
   int LABELSTAGGER = 20;
-  boolean staggered;
-  
+  int CLICKABLE_WIDTH = 20;
 
   // Create the Axis
-  Axis(int tempX, int tempY, int tempAxisHeight, String s, int tempMin, int tempMax, boolean tempStaggered){
+  Axis(int tempX, int tempY, int tempAxisHeight, String tempLabel, int tempMin, int tempMax, boolean tempStaggered){
     x = tempX;
     y = tempY;
     axisHeight = tempAxisHeight;
-    label = s;
+    label = tempLabel;
     min = tempMin - (tempMin % 10); // Round down to nearest 10
     max = Math.round((tempMax + 5)/ 10.0) * 10; // Round up to nearest 10
     staggered = tempStaggered;
-    
+    isBeingDragged = false;
+    dragOffsetY = 0;
   }
 
   // Display the Axis
@@ -55,14 +59,25 @@ class Axis {
     // max tick mark and label
     line(x-TICKWIDTH, y - axisHeight, x+TICKWIDTH, y - axisHeight);
     text(max, x, y - axisHeight);
+    
+    // Debug Rect
+    //rect(x - CLICKABLE_WIDTH/2, y-axisHeight, CLICKABLE_WIDTH, axisHeight);
   }
 
   int getX() {
     return x;
   }
+  
+  void setX(int tempX) {
+    x = tempX;
+  }
 
   int getY() {
     return y;
+  }
+  
+  void setY(int tempY) {
+    y = tempY;
   }
 
   int getAxisHeight() {
@@ -79,6 +94,31 @@ class Axis {
 
   int getMax() {
     return max;
+  }
+  
+  boolean getIsBeingDragged() {
+    return isBeingDragged;
+  }
+  
+  void setIsBeingDragged(boolean tempIsBeingDragged) {
+    isBeingDragged = tempIsBeingDragged;
+  }
+  
+  float getDragOffsetY() {
+    return dragOffsetY;
+  }
+  
+ void setDragOffsetY(float tempOffsetY) {
+    dragOffsetY = tempOffsetY;
+  }
+  
+  boolean isPosInsideAxis(float posX, float posY) {
+    if (posX >= x - (CLICKABLE_WIDTH / 2) && posX <= x + (CLICKABLE_WIDTH / 2)) {
+      if (posY <= y && posY >= (y - axisHeight)) {
+        return true;
+      }
+    }
+    return false;
   }
   
 }
