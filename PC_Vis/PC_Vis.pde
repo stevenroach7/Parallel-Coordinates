@@ -40,7 +40,7 @@ void loadData() {
   tableReader = new TableReader(PATH);
   items = tableReader.parseTable();
   
-  axisLabels = items.get(0).getQuantKeys();
+  axisLabels = new ArrayList(items.get(0).getQuantMap().keySet());
 }
 
 
@@ -85,15 +85,12 @@ void createLines() {
   lines = new ArrayList();
   for (Item item: items) {
      
-    ArrayList<String> quantKeys = item.getQuantKeys();
-    ArrayList<Float> quantValues = item.getQuantValues();
+    HashMap<String, Float> quantMap = item.getQuantMap();
 
     ArrayList<Position> positions = new ArrayList();
-    for (int i = 0; i < quantKeys.size(); i++) { // Loop over all targets
-        String quantKey = quantKeys.get(i);
-        float quantValue = quantValues.get(i);
-        Axis axis = getAxisFromLabel(quantKey);
-        positions.add(new Position(axis.getX(), getYPosOnAxisFromValue(quantValue, axis)));
+    for (HashMap.Entry<String, Float> quantEntry: quantMap.entrySet()) {
+        Axis axis = getAxisFromLabel(quantEntry.getKey());
+        positions.add(new Position(axis.getX(), getYPosOnAxisFromValue(quantEntry.getValue(), axis)));
     }
     int colorHex = colorMap.get(item.getCatValue());
     lines.add(new Line(item, positions, colorHex));
@@ -143,11 +140,9 @@ float getYPosOnAxisFromValue(float value, Axis axis) {
 
 float getMaxValue(String label) {
   
-  int itemsIndex = items.get(0).getQuantKeys().indexOf(label);
   float maxValue = 0;
-  
   for (int i = 0; i < items.size(); i++) {
-    float itemValue = items.get(i).getQuantValues().get(itemsIndex);
+    float itemValue = items.get(i).getQuantMap().get(label);
     if (itemValue > maxValue) {
       maxValue = itemValue;
     }
@@ -156,11 +151,10 @@ float getMaxValue(String label) {
 }
 
 float getMinValue(String label) {
-  int itemsIndex = items.get(0).getQuantKeys().indexOf(label);
+
   float minValue = 10000000;
-  
   for (int i = 0; i < items.size(); i++) {
-    float itemValue = items.get(i).getQuantValues().get(itemsIndex);
+    float itemValue = items.get(i).getQuantMap().get(label);
     if (itemValue < minValue) {
       minValue = itemValue;
     }
@@ -209,14 +203,6 @@ void mouseMoved() {
    }
 }
 
-void filterLinesByGroup(String groupLabel) {
-  for (Line line: lines) {
-    if (!groupLabel.equals(line.getItem().getCatValue())) {
-      line.setIsDisplayed(false);
-    }
-  }
-}
-
 void resetLines() {
   for (Line line: lines) {
     line.setIsDisplayed(true);
@@ -257,14 +243,20 @@ void repositionLinesFromAxes() {
   for (Line line: lines) {
     ArrayList<Position> positions = new ArrayList();
     for (Axis axis: axes) {
-        int quantValuesIndex = line.item.getQuantKeys().indexOf(axis.label); // TODO: Maybe store map in Item so we don't have to search here.
-        float quantValue = line.item.getQuantValues().get(quantValuesIndex);
+        float quantValue = line.item.getQuantMap().get(axis.label);
         positions.add(new Position(axis.getX(), getYPosOnAxisFromValue(quantValue, axis)));
     }
     line.setPositions(positions);
   }
 }
 
+void filterLinesByGroup(String groupLabel) {
+  for (Line line: lines) {
+    if (!groupLabel.equals(line.getItem().getCatValue())) {
+      line.setIsDisplayed(false);
+    }
+  }
+}
 
 // Draw Method
 

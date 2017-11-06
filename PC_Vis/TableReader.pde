@@ -25,8 +25,7 @@ class TableReader {
       
       String nameKey = "";
       String nameValue = "";
-      ArrayList<String> quantKeys = new ArrayList();
-      ArrayList<Float> quantValues = new ArrayList();
+      HashMap<String, Float> quantMap = new HashMap();
       String catKey = "";
       String catValue = "";
       
@@ -38,8 +37,7 @@ class TableReader {
             nameValue = row.getString(j);
             break;
           case "quant":
-            quantKeys.add(headerRow.getString(j));
-            quantValues.add(row.getFloat(j));
+            quantMap.put(headerRow.getString(j), row.getFloat(j));
             break;
           case "cat":  
             catKey = headerRow.getString(j);
@@ -48,7 +46,7 @@ class TableReader {
         }
       }
       if (!nameValue.isEmpty()) {
-        items.add(new Item(nameKey, nameValue, quantKeys, quantValues, catKey, catValue));
+        items.add(new Item(nameKey, nameValue, quantMap, catKey, catValue));
       }
     }
     return items;

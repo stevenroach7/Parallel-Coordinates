@@ -4,16 +4,14 @@ class Item {
   
   String nameKey;
   String nameValue;
-  ArrayList<String> quantKeys;
-  ArrayList<Float> quantValues;
+  HashMap<String, Float> quantMap;
   String catKey;
   String catValue;
   
-  Item(String tempNameKey, String tempNameValue, ArrayList<String> tempQuantKeys, ArrayList<Float> tempQuantValues, String tempCatKey, String tempCatValue) {
+  Item(String tempNameKey, String tempNameValue, HashMap<String, Float> tempQuantMap, String tempCatKey, String tempCatValue) {
     nameKey = tempNameKey;
     nameValue = tempNameValue;
-    quantKeys = tempQuantKeys;
-    quantValues = tempQuantValues;
+    quantMap = tempQuantMap;
     catKey = tempCatKey;
     catValue = tempCatValue;
   }
@@ -26,14 +24,10 @@ class Item {
     return nameValue;
   }
   
-  ArrayList<String> getQuantKeys() {
-    return quantKeys;
+  HashMap<String, Float> getQuantMap() {
+    return quantMap;
   }
-  
-  ArrayList<Float> getQuantValues() {
-    return quantValues;
-  }
-  
+
   String getCatKey() {
     return catKey;
   }
@@ -57,10 +51,10 @@ class Item {
     sb.append(", ");
     
     sb.append("quantValues = ");
-    for (int i = 0; i < quantValues.size(); i++) {
-       sb.append(quantKeys.get(i));
+    for (HashMap.Entry quantEntry: quantMap.entrySet()) {
+       sb.append(quantEntry.getKey());
        sb.append(" = ");
-       sb.append(quantValues.get(i));
+       sb.append(quantEntry.getValue());
        sb.append(", ");
     }
     sb.deleteCharAt(sb.length() - 2);
