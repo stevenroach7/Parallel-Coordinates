@@ -5,19 +5,25 @@ class Line {
   Item item;
   ArrayList<Position> positions;
   int colorHex;
-  boolean isDisplayed;
+  boolean groupFilterBool;
+  boolean quantFilterBool;
   boolean isThicker;
   
   Line(Item tempItem, ArrayList<Position> tempPositions, int tempColorHex) {
     item = tempItem;
     positions = tempPositions;
     colorHex = tempColorHex;
-    isDisplayed = true;
+    groupFilterBool = true;
+    quantFilterBool = true;
     isThicker = false;;
   }
   
-  void setIsDisplayed(boolean tempIsDisplayed) {
-     isDisplayed = tempIsDisplayed;
+  void setGroupFilterBool(boolean tempGroupFilerBool) {
+     groupFilterBool = tempGroupFilerBool;
+  }
+  
+  void setQuantFilterBool(boolean tempQuantFilerBool) {
+     quantFilterBool = tempQuantFilerBool;
   }
   
   Item getItem() {
@@ -30,7 +36,7 @@ class Line {
   
   void display() {
     
-    if (isDisplayed) {
+    if (groupFilterBool && quantFilterBool) {
       stroke(colorHex);
       strokeWeight(isThicker ? 3 : 1);
       

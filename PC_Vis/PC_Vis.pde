@@ -195,7 +195,7 @@ void mouseReleased() {
 }
 
 void mouseMoved() {
-   resetLines();
+   resetLineGroupFilterBools();
    for (Group group: groups) {
       if (group.isPosInsideLabel(mouseX, mouseY)) {
          filterLinesByGroup(group.getLabel());
@@ -203,9 +203,9 @@ void mouseMoved() {
    }
 }
 
-void resetLines() {
+void resetLineGroupFilterBools() {
   for (Line line: lines) {
-    line.setIsDisplayed(true);
+    line.setGroupFilterBool(true);
   }
 }
 
@@ -253,7 +253,16 @@ void repositionLinesFromAxes() {
 void filterLinesByGroup(String groupLabel) {
   for (Line line: lines) {
     if (!groupLabel.equals(line.getItem().getCatValue())) {
-      line.setIsDisplayed(false);
+      line.setGroupFilterBool(false);
+    }
+  }
+}
+
+void filterLinesByQuantRange(String quantKey, float minValue, float maxValue) {
+  for (Line line: lines) {
+    float itemValue = line.item.quantMap.get(quantKey);
+    if (itemValue < minValue || itemValue > maxValue) {
+       line.setQuantFilterBool(false);
     }
   }
 }
