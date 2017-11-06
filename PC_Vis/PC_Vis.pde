@@ -167,7 +167,7 @@ float getMinValue(String label) {
 
 void mousePressed() {
   for (Axis axis : axes) {
-    if (axis.isPosInsideAxis(mouseX, mouseY)) {
+    if (axis.isPosInsideMoveButton(mouseX, mouseY)) {
       axis.isBeingDragged = true;
       axis.setDragOffsetY(mouseY - axis.getY());
     }

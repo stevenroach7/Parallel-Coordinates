@@ -37,12 +37,14 @@ class Axis {
     textAlign(CENTER, BOTTOM);
     
 
-    // vertical axis line and variable label
+    // vertical axis line, variable label, and move axis button
     line(x, y, x, y - axisHeight);
     if (staggered){
       text(label, x, y + LABELSTAGGER*2);
+      rect(x - (CLICKABLE_WIDTH / 2), y, CLICKABLE_WIDTH, LABELSTAGGER);
     } else {
       text(label, x, y + LABELSTAGGER);
+      rect(x - (CLICKABLE_WIDTH / 2), y+LABELSTAGGER, CLICKABLE_WIDTH, LABELSTAGGER);
     }
 
     textAlign(CENTER, BOTTOM);
@@ -116,10 +118,16 @@ class Axis {
     dragOffsetY = tempOffsetY;
   }
   
-  boolean isPosInsideAxis(float posX, float posY) {
+  boolean isPosInsideMoveButton(float posX, float posY) {
     if (posX >= x - (CLICKABLE_WIDTH / 2) && posX <= x + (CLICKABLE_WIDTH / 2)) {
-      if (posY <= y && posY >= (y - axisHeight)) {
-        return true;
+      if (staggered) {
+        if (posY >= y  && posY <= (y + LABELSTAGGER)) {
+          return true;
+        }
+      } else {
+        if (posY >= y + LABELSTAGGER  && posY <= (y + (2 * LABELSTAGGER))) {
+          return true;
+        }
       }
     }
     return false;
