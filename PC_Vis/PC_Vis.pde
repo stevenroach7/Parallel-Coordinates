@@ -275,19 +275,23 @@ void filterLinesByGroup(String groupLabel) {
 }
 
 void applyAxisFilters() {
-  for (Axis axis: axes) {
-    if (axis.quantFilter != null) {
-      filterLinesByQuantRange(axis.getLabel(), axis.quantFilter);
+  
+  for (Line line: lines) {
+    
+    Item lineItem = line.item;
+    boolean allFiltersPass = true;
+    for (Axis axis: axes) {
+      if (axis.quantFilter != null) {
+        float itemValue = lineItem.quantMap.get(axis.getLabel());
+        if (!axis.quantFilter.isValueInRange(itemValue)) {
+          allFiltersPass = false;
+        }
+      }
     }
+    line.setQuantFilterBool(allFiltersPass);
   }
 }
 
-void filterLinesByQuantRange(String quantKey, QuantFilter quantFilter) {
-  for (Line line: lines) {
-    float itemValue = line.item.quantMap.get(quantKey);
-    line.setQuantFilterBool(quantFilter.isValueInRange(itemValue)); // TODO: I'm not sure if this logic is right for multiple axis filters
-  }
-}
 
 // Draw Method
 
