@@ -3,6 +3,7 @@ TableReader tableReader;
 ArrayList<Item> items;
 ArrayList<String> axisLabels;
 ArrayList<Axis> axes;
+ArrayList<Line> lines;
 HashMap<String, Integer> colorMap;
 
 // Constants
@@ -20,7 +21,8 @@ void setup() {
   
   loadData();
   // Draw canvas elements
-  drawAxes();
+  createAxes();
+  createLines();
 }
 
 void loadData() {
@@ -47,7 +49,7 @@ HashMap<String, Integer> createColorMap(int[] distinctColors) {
   return colorMap;
 }
 
-void drawAxes() {
+void createAxes() {
   axes = new ArrayList();
   int axisX = PLOT_X;
   int axisY = PLOT_Y + AXIS_HEIGHT; // Axis is anchord by bottom coordinate
@@ -67,36 +69,25 @@ void drawAxes() {
   }
 }
 
-void drawLines() {
+void createLines() {
+  
+  lines = new ArrayList();
   for (Item item: items) {
-    
-    // TODO: add item filters here
-     stroke(colorMap.get(item.getCatValue()));
-     strokeWeight(1);
-    
-     // TODO: Make Line its own class for eventual interaction and highlighting?
      
-     ArrayList<String> quantKeys = item.getQuantKeys();
-     ArrayList<Float> quantValues = item.getQuantValues();
-     
-     String sourceKey = quantKeys.get(0);
-     float sourceValue = quantValues.get(0);
-     Axis sourceAxis = getAxisFromLabel(sourceKey);
-     float sourceY = getYPosOnAxisFromValue(sourceValue, sourceAxis);
-    
-     for (int i = 1; i < quantKeys.size(); i++) { // Loop over all targets
-       
-        String targetKey = quantKeys.get(i);
-        float targetValue = quantValues.get(i);
-        Axis targetAxis = getAxisFromLabel(targetKey);
-        float targetY = getYPosOnAxisFromValue(targetValue, targetAxis);
-        
-        line(sourceAxis.getX(), sourceY, targetAxis.getX(), targetY); 
-        
-        sourceAxis = targetAxis; // Target becomes source of next iteration
-        sourceY = targetY;
-     }
+    ArrayList<String> quantKeys = item.getQuantKeys();
+    ArrayList<Float> quantValues = item.getQuantValues();
+
+    ArrayList<Position> positions = new ArrayList();
+    for (int i = 0; i < quantKeys.size(); i++) { // Loop over all targets
+        String quantKey = quantKeys.get(i);
+        float quantValue = quantValues.get(i);
+        Axis axis = getAxisFromLabel(quantKey);
+        positions.add(new Position(axis.getX(), getYPosOnAxisFromValue(quantValue, axis)));
+    }
+    int colorHex = colorMap.get(item.getCatValue());
+    lines.add(new Line(positions, colorHex));
   }
+  
 }
 
 Axis getAxisFromLabel(String label) {
@@ -145,5 +136,7 @@ void draw(){
   for (Axis axis: axes) {
     axis.display();
   }
-  drawLines();
+  for (Line line: lines) {
+    line.display();
+  }
 }
