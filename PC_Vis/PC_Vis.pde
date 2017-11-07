@@ -190,11 +190,11 @@ void mouseDragged() {
         float newValue = getValueFromYPosOnAxis(mouseY, axis);
         QuantFilter axisFilter = axis.getQuantFilter();
         axisFilter.setMovingValue(newValue);
+        axisFilter.setFilterOn(true);
         axis.setQuantFilter(axisFilter);
       }
     }
   }
-  
 }
 
 void mouseReleased() {

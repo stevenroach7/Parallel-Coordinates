@@ -66,7 +66,7 @@ class Axis {
     text(max, x, y - axisHeight);
     
     // draw filter
-    if (quantFilter != null) {
+    if (quantFilter != null && quantFilter.getIsFilterOn()) {
       float fixedValue = quantFilter.getFixedValue();
       float movingValue = quantFilter.getMovingValue();
       float yMinPos = getYPosOnAxisFromValue(min(fixedValue, movingValue));
