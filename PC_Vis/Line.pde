@@ -15,7 +15,7 @@ class Line {
     colorHex = tempColorHex;
     groupFilterBool = true;
     quantFilterBool = true;
-    isThicker = false;;
+    isThicker = false;
   }
   
   void setGroupFilterBool(boolean tempGroupFilerBool) {
