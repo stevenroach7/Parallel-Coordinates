@@ -1,3 +1,6 @@
+import java.util.Collections;
+import java.util.Comparator;
+
 // Globals
 TableReader tableReader;
 ArrayList<Item> items;
@@ -8,6 +11,8 @@ ArrayList<Line> lines;
 ArrayList<Group> groups;
 HashMap<String, Integer> colorMap;
 String catName;
+ArrayList<TableEntry> displayedEntries;
+boolean isTableSortedAscending = true;
 
 // Constants
 String PATH = "../Data/cars-cleaned.tsv";
@@ -19,6 +24,7 @@ int PLOT_WIDTH = 1400;
 int Y_STAGGER = 25;
 int HEADER_STAGGER = 250;
 int BLOCK_WIDTH = 300;
+
 
 // Colors
 // Array of pregenerated distinct CIELab colors from https://stackoverflow.com/questions/309149/generate-distinctly-different-rgb-colors-in-graphs
@@ -37,6 +43,7 @@ void setup() {
   createColorMap();
   createLines();
   createGroups();
+  createDisplayedEntries();
 }
 
 void loadData() {
@@ -101,8 +108,7 @@ void createLines() {
 }
 
 void createGroups(){
-  // loop for drawing group names
-  // Using an enhanced loop to interate over each entry
+  // For drawing group names
   String currentGroup;
   int currentColor;
   int heightAdjust = 0;
@@ -179,13 +185,15 @@ void mousePressed() {
     if (axis.isPosInsideMoveButton(mouseX, mouseY)) {
       axis.isBeingDragged = true;
       axis.setDragOffsetY(mouseY - axis.getY());
-    } else if (axis.isPosInsideAxis(mouseX, mouseY)) { // TODO: Implement filter canceling
+    } else if (axis.isPosInsideAxis(mouseX, mouseY)) {
       float value = getValueFromYPosOnAxis(mouseY, axis);
       QuantFilter quantFilter = new QuantFilter(value, value); // TODO: Don't set movingValue until mouse is dragged
       axis.setQuantFilter(quantFilter); 
       axis.setIsFilterBeingDragged(true);
     }
   }
+  applyAxisFilters();
+  createDisplayedEntries();
 }
 
 void mouseDragged() {
@@ -201,6 +209,7 @@ void mouseDragged() {
         axisFilter.setMovingValue(newValue);
         axisFilter.setFilterOn(true);
         axis.setQuantFilter(axisFilter);
+        createDisplayedEntries();
       }
     }
   }
@@ -211,6 +220,7 @@ void mouseReleased() {
     Axis axis = axes.get(i);
     if (axis.getIsBeingDragged()) {
       reorderAxes(i, axis);
+      createDisplayedEntries();
     }
     axis.setIsFilterBeingDragged(false);
   }
@@ -221,6 +231,7 @@ void mouseMoved() {
    for (Group group: groups) {
       if (group.isPosInsideLabel(mouseX, mouseY)) {
          filterLinesByGroup(group.getLabel());
+         createDisplayedEntries();
       }
    }
 }
@@ -290,7 +301,7 @@ void applyAxisFilters() {
     Item lineItem = line.item;
     boolean allFiltersPass = true;
     for (Axis axis: axes) {
-      if (axis.quantFilter != null) {
+      if (axis.quantFilter != null && axis.quantFilter.isFilterOn) {
         float itemValue = lineItem.quantMap.get(axis.getLabel());
         if (!axis.quantFilter.isValueInRange(itemValue)) {
           allFiltersPass = false;
@@ -318,6 +329,42 @@ void drawHeaders(){
   text("Items", PLOT_X + 2 * BLOCK_WIDTH, height - HEADER_STAGGER);
 }
 
+void createDisplayedEntries() {
+  
+  final String quantKey = axes.get(0).label; // Need to declare final to use in comparator, First axis determines table entries
+  ArrayList<Line> optionLines = new ArrayList();
+  for (Line line: lines) {
+    if (line.quantFilterBool && line.groupFilterBool) { // Only include displayed lines in table entries
+      optionLines.add(line);
+    } 
+   } 
+
+   Collections.sort(optionLines, new Comparator<Line>() { // No access to streams so are defining our own comparator here to sort based on the value of the first axis
+     public int compare(Line l1, Line l2) {
+       float value1 = l1.item.quantMap.get(quantKey);
+       float value2 = l2.item.quantMap.get(quantKey);
+       if (value1 == value2) {
+          return 0;
+       } 
+       return (value1 < value2) ? -1: 1;       
+    }
+   });
+   
+   if (!isTableSortedAscending) {
+     Collections.reverse(optionLines);
+   }
+   
+   displayedEntries = new ArrayList();
+   float yPos = height - HEADER_STAGGER + 40; // TODO: Make these constants
+   
+   int numOptions = optionLines.size();
+   for (int i = 0; i < min(10, numOptions); i++) { // Only display the first 10, or numOptions if it is less than 10
+     Line optionLine = optionLines.get(i);
+     TableEntry entry = new TableEntry(BLOCK_WIDTH * 2, yPos, optionLine.getItem().getNameValue(), optionLine.colorHex);
+     displayedEntries.add(entry);
+     yPos += 20;
+   }
+  }
 
 // Draw Method
 
@@ -333,5 +380,8 @@ void draw(){
   }
   for (Group group: groups) {
     group.display();
+  }
+  for (TableEntry entry: displayedEntries) {
+    entry.display();
   }
 }
