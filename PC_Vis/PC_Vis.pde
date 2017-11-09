@@ -100,7 +100,7 @@ void createLines() {
     ArrayList<Position> positions = new ArrayList();
     for (HashMap.Entry<String, Float> quantEntry: quantMap.entrySet()) {
         Axis axis = getAxisFromLabel(quantEntry.getKey());
-        positions.add(new Position(axis.getX(), axis.getYPosOnAxisFromValue(quantEntry.getValue())));
+        positions.add(new Position(axis.x, axis.getYPosOnAxisFromValue(quantEntry.getValue())));
     }
     int colorHex = colorMap.get(item.getCatValue());
     lines.add(new Line(item, positions, colorHex));
@@ -141,7 +141,7 @@ void createGroups(){
 
 Axis getAxisFromLabel(String label) {
   for (Axis axis: axes) {
-    if (axis.getLabel().equals(label)) {
+    if (axis.label.equals(label)) {
       return axis;
     }
   }
@@ -149,8 +149,8 @@ Axis getAxisFromLabel(String label) {
 }
 
 float getValueFromYPosOnAxis(float yPos, Axis axis) { // TODO: Move this method into axis class
-  float yDist = axis.getY() - yPos;
-  return (((yDist / AXIS_HEIGHT) * (axis.getMax() - axis.getMin())) + axis.getMin());
+  float yDist = axis.y - yPos;
+  return (((yDist / AXIS_HEIGHT) * (axis.max - axis.min)) + axis.min);
 }
 
 float getMaxValue(String label) {
@@ -184,12 +184,12 @@ void mousePressed() {
   for (Axis axis : axes) {
     if (axis.isPosInsideMoveButton(mouseX, mouseY)) {
       axis.isBeingDragged = true;
-      axis.setDragOffsetY(mouseY - axis.getY());
+      axis.dragOffsetY = mouseY - axis.y;
     } else if (axis.isPosInsideAxis(mouseX, mouseY)) {
       float value = getValueFromYPosOnAxis(mouseY, axis);
       QuantFilter quantFilter = new QuantFilter(value, value); // TODO: Don't set movingValue until mouse is dragged
-      axis.setQuantFilter(quantFilter); 
-      axis.setIsFilterBeingDragged(true);
+      axis.quantFilter = quantFilter; 
+      axis.isFilterBeingDragged = true;
     }
   }
   applyAxisFilters();
@@ -198,17 +198,17 @@ void mousePressed() {
 
 void mouseDragged() {
   for (Axis axis : axes) {
-    if (axis.getIsBeingDragged()) {
-      axis.setX(mouseX);
-      axis.setY((int) (mouseY - axis.getDragOffsetY()));
+    if (axis.isBeingDragged) {
+      axis.x = mouseX;
+      axis.y = (int) (mouseY - axis.dragOffsetY);
       repositionLinesFromAxes();
-    } else if (axis.getIsFilterBeingDragged()) {
+    } else if (axis.isFilterBeingDragged) {
       if (axis.isYPosInsideAxis(mouseX, mouseY)) {
         float newValue = getValueFromYPosOnAxis(mouseY, axis);
-        QuantFilter axisFilter = axis.getQuantFilter();
+        QuantFilter axisFilter = axis.quantFilter;
         axisFilter.setMovingValue(newValue);
         axisFilter.setFilterOn(true);
-        axis.setQuantFilter(axisFilter);
+        axis.quantFilter = axisFilter;
         createDisplayedEntries();
       }
     }
@@ -218,11 +218,11 @@ void mouseDragged() {
 void mouseReleased() {
   for (int i = 0; i < axes.size(); i++) {
     Axis axis = axes.get(i);
-    if (axis.getIsBeingDragged()) {
+    if (axis.isBeingDragged) {
       reorderAxes(i, axis);
       createDisplayedEntries();
     }
-    axis.setIsFilterBeingDragged(false);
+    axis.isFilterBeingDragged = false;
   }
 }
 
@@ -244,7 +244,7 @@ void resetLineGroupFilterBools() {
 
 void reorderAxes(int prevIndex, Axis draggedAxis) {
   
-  int newIndex = getAxisIndexFromXPosition(draggedAxis.getX());
+  int newIndex = getAxisIndexFromXPosition(draggedAxis.x);
   axes.remove(prevIndex);
   
   if (newIndex <= prevIndex) { 
@@ -257,10 +257,10 @@ void reorderAxes(int prevIndex, Axis draggedAxis) {
   boolean labelStagger = false;
   for (int i = 0; i < axes.size(); i++) {
     Axis axis = axes.get(i);
-    axis.setX(axisXPositions.get(i));
-    axis.setY(PLOT_Y + AXIS_HEIGHT);
-    axis.setIsBeingDragged(false);
-    axis.setStaggered(labelStagger);
+    axis.x = axisXPositions.get(i);
+    axis.y = PLOT_Y + AXIS_HEIGHT;
+    axis.isBeingDragged = false;
+    axis.staggered = labelStagger;
     labelStagger = !labelStagger;
   }
   repositionLinesFromAxes();
@@ -280,7 +280,7 @@ void repositionLinesFromAxes() {
     ArrayList<Position> positions = new ArrayList();
     for (Axis axis: axes) {
         float quantValue = line.item.getQuantMap().get(axis.label);
-        positions.add(new Position(axis.getX(), axis.getYPosOnAxisFromValue(quantValue)));
+        positions.add(new Position(axis.x, axis.getYPosOnAxisFromValue(quantValue)));
     }
     line.setPositions(positions);
   }
@@ -302,7 +302,7 @@ void applyAxisFilters() {
     boolean allFiltersPass = true;
     for (Axis axis: axes) {
       if (axis.quantFilter != null && axis.quantFilter.isFilterOn) {
-        float itemValue = lineItem.quantMap.get(axis.getLabel());
+        float itemValue = lineItem.quantMap.get(axis.label);
         if (!axis.quantFilter.isValueInRange(itemValue)) {
           allFiltersPass = false;
         }

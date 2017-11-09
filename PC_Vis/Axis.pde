@@ -79,80 +79,10 @@ class Axis {
     // Debug Rect
     //rect(x - CLICKABLE_WIDTH/2, y-axisHeight, CLICKABLE_WIDTH, axisHeight);
   }
-
-
   
   float getYPosOnAxisFromValue(float value) {
     float distance = ((value - min) / (max - min)) * axisHeight;
     return y - distance;
-  }
-
-  int getX() {
-    return x;
-  }
-  
-  void setX(int tempX) {
-    x = tempX;
-  }
-
-  int getY() {
-    return y;
-  }
-  
-  void setY(int tempY) {
-    y = tempY;
-  }
-
-  int getAxisHeight() {
-    return axisHeight;
-  }
-
-  String getLabel() {
-    return label;
-  }
-
-  int getMin() {
-    return min;
-  }
-
-  int getMax() {
-    return max;
-  }
-  
-  void setStaggered(boolean tempStaggered) {
-    staggered = tempStaggered;
-  }
-  
-  boolean getIsBeingDragged() {
-    return isBeingDragged;
-  }
-  
-  void setIsBeingDragged(boolean tempIsBeingDragged) {
-    isBeingDragged = tempIsBeingDragged;
-  }
-  
-  boolean getIsFilterBeingDragged() {
-    return isFilterBeingDragged;
-  }
-  
-  void setIsFilterBeingDragged(boolean tempIsFilterBeingDragged) {
-    isFilterBeingDragged = tempIsFilterBeingDragged;
-  }
-  
-  float getDragOffsetY() {
-    return dragOffsetY;
-  }
-  
- void setDragOffsetY(float tempOffsetY) {
-    dragOffsetY = tempOffsetY;
-  }
-  
-  QuantFilter getQuantFilter() {
-    return quantFilter;
-  }
-  
-  void setQuantFilter(QuantFilter tempQuantFilter) {
-    quantFilter = tempQuantFilter;
   }
   
   boolean isPosInsideMoveButton(float posX, float posY) {
