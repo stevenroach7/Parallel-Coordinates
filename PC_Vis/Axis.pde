@@ -11,11 +11,12 @@ class Axis {
   boolean isBeingDragged;
   float dragOffsetY;
   boolean isFilterBeingDragged;
+  PImage rearrangeButton;
   QuantFilter quantFilter;
   
   int TICKWIDTH = 8;
   int LABELSTAGGER = 20;
-  int CLICKABLE_WIDTH = 20;
+  int CLICKABLE_WIDTH = 28;
 
   // Create the Axis
   Axis(int tempX, int tempY, int tempAxisHeight, String tempLabel, int tempMin, int tempMax, boolean tempStaggered){
@@ -26,6 +27,7 @@ class Axis {
     min = tempMin - (tempMin % 10); // Round down to nearest 10
     max = Math.round((tempMax + 5)/ 10.0) * 10; // Round up to nearest 10
     staggered = tempStaggered;
+    rearrangeButton = loadImage("arrows.png");
     isBeingDragged = false;
     dragOffsetY = 0;
     isFilterBeingDragged = false;
@@ -44,10 +46,10 @@ class Axis {
     line(x, y, x, y - axisHeight);
     if (staggered){
       text(label, x, y + LABELSTAGGER*2);
-      rect(x - (CLICKABLE_WIDTH / 2), y, CLICKABLE_WIDTH, LABELSTAGGER);
+      image(rearrangeButton, x - (CLICKABLE_WIDTH / 2), y, CLICKABLE_WIDTH, CLICKABLE_WIDTH);
     } else {
       text(label, x, y + LABELSTAGGER);
-      rect(x - (CLICKABLE_WIDTH / 2), y+LABELSTAGGER, CLICKABLE_WIDTH, LABELSTAGGER);
+      image(rearrangeButton, x - (CLICKABLE_WIDTH / 2), y + (CLICKABLE_WIDTH / 2), CLICKABLE_WIDTH, CLICKABLE_WIDTH);
     }
 
     textAlign(CENTER, BOTTOM);

@@ -9,7 +9,7 @@ ArrayList<Group> groups;
 HashMap<String, Integer> colorMap;
 
 // Constants
-String PATH = "../Data/cars-cleaned.tsv";
+String PATH = "../Data/cameras-cleaned.tsv";
 int AXIS_Y = 500;
 int AXIS_HEIGHT = 400;
 int PLOT_X = 100;
