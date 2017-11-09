@@ -110,7 +110,6 @@ void createGroups(){
   
   int i = 0;
   int groupSize = colorMap.size();
-  print(groupSize);
   groups = new ArrayList();
   for (HashMap.Entry group : colorMap.entrySet()) {
     if (groupSize <= 3){
@@ -304,10 +303,15 @@ void applyAxisFilters() {
 
 void drawHeaders(){
   fill(0);
-  textSize(16);
-  String about = "This displays data from " + PATH + 
-  "";
-  text(about, PLOT_X, height - HEADER_STAGGER + Y_STAGGER);
+  textSize(14);
+  textAlign(LEFT, CENTER);
+  String about = "This plot displays quantitative attributes of items from '" + PATH + 
+  "' as parrallel coordinates. " + 
+  "CLICK & DRAG the reorder icon at the bottom of each axis to swap its order with another axis. " + 
+  "Items names are displayed in sorted order, by whichever is arranged first (from left). " +
+  "CLICK & DRAG vertically along an axis to filter. " + 
+  "HOVER over color group names to exclusively display that group.";
+  text(about, PLOT_X, height - HEADER_STAGGER + Y_STAGGER, BLOCK_WIDTH, HEADER_STAGGER - Y_STAGGER);
   textSize(24);
   text("About", PLOT_X, height - HEADER_STAGGER); 
   text(catName, PLOT_X + BLOCK_WIDTH, height - HEADER_STAGGER);
