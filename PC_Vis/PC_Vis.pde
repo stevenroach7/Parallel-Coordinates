@@ -186,7 +186,7 @@ void mouseDragged() {
       axis.setY((int) (mouseY - axis.getDragOffsetY()));
       repositionLinesFromAxes();
     } else if (axis.getIsFilterBeingDragged()) {
-      if (axis.isPosInsideAxis(mouseX, mouseY)) {
+      if (axis.isYPosInsideAxis(mouseX, mouseY)) {
         float newValue = getValueFromYPosOnAxis(mouseY, axis);
         QuantFilter axisFilter = axis.getQuantFilter();
         axisFilter.setMovingValue(newValue);

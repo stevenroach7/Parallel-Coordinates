@@ -177,4 +177,8 @@ class Axis {
     return false;
   }
   
+  boolean isYPosInsideAxis(float posX, float posY) {
+    return (posY <= y && posY >= (y - axisHeight));
+  }
+  
 }
