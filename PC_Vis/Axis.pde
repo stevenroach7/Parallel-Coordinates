@@ -68,9 +68,9 @@ class Axis {
     text(max, x, y - axisHeight);
     
     // draw filter
-    if (quantFilter != null && quantFilter.getIsFilterOn()) {
-      float fixedValue = quantFilter.getFixedValue();
-      float movingValue = quantFilter.getMovingValue();
+    if (quantFilter != null && quantFilter.isFilterOn) {
+      float fixedValue = quantFilter.fixedValue;
+      float movingValue = quantFilter.movingValue;
       float yMinPos = getYPosOnAxisFromValue(min(fixedValue, movingValue));
       float yMaxPos = getYPosOnAxisFromValue(max(fixedValue, movingValue));
       rect(x - CLICKABLE_WIDTH/2, yMaxPos, CLICKABLE_WIDTH, yMinPos - yMaxPos);
@@ -109,7 +109,7 @@ class Axis {
     return false;
   }
   
-  boolean isYPosInsideAxis(float posX, float posY) {
+  boolean isYPosInsideAxis(float posY) {
     return (posY <= y && posY >= (y - axisHeight));
   }
   

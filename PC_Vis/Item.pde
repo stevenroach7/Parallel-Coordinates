@@ -16,26 +16,6 @@ class Item {
     catValue = tempCatValue;
   }
   
-  String getNameKey() {
-    return nameKey;
-  }
- 
-  String getNameValue() {
-    return nameValue;
-  }
-  
-  HashMap<String, Float> getQuantMap() {
-    return quantMap;
-  }
-
-  String getCatKey() {
-    return catKey;
-  }
-  
-  String getCatValue() {
-    return catValue;
-  }
-  
   String toString() {
     
     StringBuilder sb = new StringBuilder();

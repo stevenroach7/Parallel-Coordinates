@@ -21,27 +21,4 @@ class QuantFilter {
     return (value >= minValue && value <= maxValue);
   }
   
-  float getFixedValue() {
-    return fixedValue;
-  }
-  
-  void setFixedValue(float tempFixedValue) {
-    fixedValue = tempFixedValue;
-  }
-  
-  float getMovingValue() {
-    return movingValue;
-  }
-  
-  void setMovingValue(float tempMovingValue) {
-    movingValue = tempMovingValue;
-  }
-  
-  boolean getIsFilterOn() {
-    return isFilterOn;
-  }
-  
-  void setFilterOn(boolean tempIsFilterOn) {
-    isFilterOn = tempIsFilterOn;
-  }
 }

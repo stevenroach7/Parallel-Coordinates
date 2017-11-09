@@ -49,8 +49,8 @@ void setup() {
 void loadData() {
   tableReader = new TableReader(PATH);
   items = tableReader.parseTable();
-  catName = items.get(0).getCatKey();
-  axisLabels = new ArrayList(items.get(0).getQuantMap().keySet());
+  catName = items.get(0).catKey;
+  axisLabels = new ArrayList(items.get(0).quantMap.keySet());
 }
 
 
@@ -60,7 +60,7 @@ void createColorMap() {
   colorMap = new HashMap();
   int nextColorIndex = 0;
   for (Item item: items){
-    String currentVal = item.getCatValue();
+    String currentVal = item.catValue;
     if (!colorMap.containsKey(currentVal)) {
       colorMap.put(currentVal, distinctColors[nextColorIndex]);
       nextColorIndex++;
@@ -95,14 +95,14 @@ void createLines() {
   lines = new ArrayList();
   for (Item item: items) {
      
-    HashMap<String, Float> quantMap = item.getQuantMap();
+    HashMap<String, Float> quantMap = item.quantMap;
 
     ArrayList<Position> positions = new ArrayList();
     for (HashMap.Entry<String, Float> quantEntry: quantMap.entrySet()) {
         Axis axis = getAxisFromLabel(quantEntry.getKey());
         positions.add(new Position(axis.x, axis.getYPosOnAxisFromValue(quantEntry.getValue())));
     }
-    int colorHex = colorMap.get(item.getCatValue());
+    int colorHex = colorMap.get(item.catValue);
     lines.add(new Line(item, positions, colorHex));
   }
 }
@@ -157,7 +157,7 @@ float getMaxValue(String label) {
   
   float maxValue = 0;
   for (int i = 0; i < items.size(); i++) {
-    float itemValue = items.get(i).getQuantMap().get(label);
+    float itemValue = items.get(i).quantMap.get(label);
     if (itemValue > maxValue) {
       maxValue = itemValue;
     }
@@ -169,7 +169,7 @@ float getMinValue(String label) {
 
   float minValue = 10000000;
   for (int i = 0; i < items.size(); i++) {
-    float itemValue = items.get(i).getQuantMap().get(label);
+    float itemValue = items.get(i).quantMap.get(label);
     if (itemValue < minValue) {
       minValue = itemValue;
     }
@@ -203,11 +203,11 @@ void mouseDragged() {
       axis.y = (int) (mouseY - axis.dragOffsetY);
       repositionLinesFromAxes();
     } else if (axis.isFilterBeingDragged) {
-      if (axis.isYPosInsideAxis(mouseX, mouseY)) {
+      if (axis.isYPosInsideAxis(mouseY)) {
         float newValue = getValueFromYPosOnAxis(mouseY, axis);
         QuantFilter axisFilter = axis.quantFilter;
-        axisFilter.setMovingValue(newValue);
-        axisFilter.setFilterOn(true);
+        axisFilter.movingValue = newValue;
+        axisFilter.isFilterOn = true;
         axis.quantFilter = axisFilter;
         createDisplayedEntries();
       }
@@ -230,7 +230,7 @@ void mouseMoved() {
    resetLineGroupFilterBools();
    for (Group group: groups) {
       if (group.isPosInsideLabel(mouseX, mouseY)) {
-         filterLinesByGroup(group.getLabel());
+         filterLinesByGroup(group.label);
          createDisplayedEntries();
       }
    }
@@ -238,7 +238,7 @@ void mouseMoved() {
 
 void resetLineGroupFilterBools() {
   for (Line line: lines) {
-    line.setGroupFilterBool(true);
+    line.groupFilterBool = true;
   }
 }
 
@@ -279,17 +279,17 @@ void repositionLinesFromAxes() {
   for (Line line: lines) {
     ArrayList<Position> positions = new ArrayList();
     for (Axis axis: axes) {
-        float quantValue = line.item.getQuantMap().get(axis.label);
+        float quantValue = line.item.quantMap.get(axis.label);
         positions.add(new Position(axis.x, axis.getYPosOnAxisFromValue(quantValue)));
     }
-    line.setPositions(positions);
+    line.positions = positions;
   }
 }
 
 void filterLinesByGroup(String groupLabel) {
   for (Line line: lines) {
-    if (!groupLabel.equals(line.getItem().getCatValue())) {
-      line.setGroupFilterBool(false);
+    if (!groupLabel.equals(line.item.catValue)) {
+      line.groupFilterBool = false;
     }
   }
 }
@@ -308,7 +308,7 @@ void applyAxisFilters() {
         }
       }
     }
-    line.setQuantFilterBool(allFiltersPass);
+    line.quantFilterBool = allFiltersPass;
   }
 }
 
@@ -360,7 +360,7 @@ void createDisplayedEntries() {
    int numOptions = optionLines.size();
    for (int i = 0; i < min(10, numOptions); i++) { // Only display the first 10, or numOptions if it is less than 10
      Line optionLine = optionLines.get(i);
-     TableEntry entry = new TableEntry(BLOCK_WIDTH * 2, yPos, optionLine.getItem().getNameValue(), optionLine.colorHex);
+     TableEntry entry = new TableEntry(BLOCK_WIDTH * 2, yPos, optionLine.item.nameValue, optionLine.colorHex);
      displayedEntries.add(entry);
      yPos += 20;
    }

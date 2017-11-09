@@ -15,10 +15,6 @@ class Group {
     label = tempLabel;
     colorHex = tempColorHex;
   }
-  
-  String getLabel() {
-    return label;
-  }
  
   boolean isPosInsideLabel(float posX, float posY) {
     if (posX >= x && posX <= x + (label.length() * CHAR_WIDTH)) {

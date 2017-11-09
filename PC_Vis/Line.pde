@@ -18,22 +18,6 @@ class Line {
     isThicker = false;
   }
   
-  void setGroupFilterBool(boolean tempGroupFilerBool) {
-     groupFilterBool = tempGroupFilerBool;
-  }
-  
-  void setQuantFilterBool(boolean tempQuantFilerBool) {
-     quantFilterBool = tempQuantFilerBool;
-  }
-  
-  Item getItem() {
-    return item;
-  }
-  
-  void setPositions(ArrayList<Position> tempPositions) {
-    positions = tempPositions;
-  }
-  
   void display() {
     
     if (groupFilterBool && quantFilterBool) {
@@ -43,7 +27,7 @@ class Line {
       Position sourcePosition = positions.get(0);
       for (int i = 1; i < positions.size(); i++) { // Loop over all target positions
         Position targetPosition = positions.get(i);
-        line(sourcePosition.getX(), sourcePosition.getY(), targetPosition.getX(), targetPosition.getY()); 
+        line(sourcePosition.x, sourcePosition.y, targetPosition.x, targetPosition.y); 
         sourcePosition = targetPosition; // Target becomes source of next iteration
       }  
     }

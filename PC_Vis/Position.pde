@@ -9,13 +9,5 @@ class Position {
     x = tempX;
     y = tempY;
   }
-  
-  float getX() {
-    return x;
-  }
-  
-  float getY() {
-     return y;
-  }
-  
+    
 }
