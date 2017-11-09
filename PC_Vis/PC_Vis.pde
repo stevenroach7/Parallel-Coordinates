@@ -148,11 +148,6 @@ Axis getAxisFromLabel(String label) {
   return null;
 }
 
-float getValueFromYPosOnAxis(float yPos, Axis axis) { // TODO: Move this method into axis class
-  float yDist = axis.y - yPos;
-  return (((yDist / AXIS_HEIGHT) * (axis.max - axis.min)) + axis.min);
-}
-
 float getMaxValue(String label) {
   
   float maxValue = 0;
@@ -186,7 +181,7 @@ void mousePressed() {
       axis.isBeingDragged = true;
       axis.dragOffsetY = mouseY - axis.y;
     } else if (axis.isPosInsideAxis(mouseX, mouseY)) {
-      float value = getValueFromYPosOnAxis(mouseY, axis);
+      float value = axis.getValueFromYPosOnAxis(mouseY);
       QuantFilter quantFilter = new QuantFilter(value, value); // TODO: Don't set movingValue until mouse is dragged
       axis.quantFilter = quantFilter; 
       axis.isFilterBeingDragged = true;
@@ -204,7 +199,7 @@ void mouseDragged() {
       repositionLinesFromAxes();
     } else if (axis.isFilterBeingDragged) {
       if (axis.isYPosInsideAxis(mouseY)) {
-        float newValue = getValueFromYPosOnAxis(mouseY, axis);
+        float newValue = axis.getValueFromYPosOnAxis(mouseY);
         QuantFilter axisFilter = axis.quantFilter;
         axisFilter.movingValue = newValue;
         axisFilter.isFilterOn = true;

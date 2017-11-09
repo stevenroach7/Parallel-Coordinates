@@ -85,6 +85,11 @@ class Axis {
     return y - distance;
   }
   
+  float getValueFromYPosOnAxis(float yPos) {
+    float yDist = y - yPos;
+    return (((yDist / AXIS_HEIGHT) * (max - min)) + min);
+  } 
+  
   boolean isPosInsideMoveButton(float posX, float posY) {
     if (posX >= x - (CLICKABLE_WIDTH / 2) && posX <= x + (CLICKABLE_WIDTH / 2)) {
       if (staggered) {
