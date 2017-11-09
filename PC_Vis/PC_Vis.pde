@@ -7,15 +7,18 @@ ArrayList<Integer> axisXPositions;
 ArrayList<Line> lines;
 ArrayList<Group> groups;
 HashMap<String, Integer> colorMap;
+String catName;
 
 // Constants
-String PATH = "../Data/cameras-cleaned.tsv";
+String PATH = "../Data/cars-cleaned.tsv";
 int AXIS_Y = 500;
 int AXIS_HEIGHT = 400;
 int PLOT_X = 100;
 int PLOT_Y = 25;
 int PLOT_WIDTH = 1400;
-int Y_STAGGER = 20;
+int Y_STAGGER = 25;
+int HEADER_STAGGER = 250;
+int BLOCK_WIDTH = 300;
 
 // Colors
 // Array of pregenerated distinct CIELab colors from https://stackoverflow.com/questions/309149/generate-distinctly-different-rgb-colors-in-graphs
@@ -39,7 +42,7 @@ void setup() {
 void loadData() {
   tableReader = new TableReader(PATH);
   items = tableReader.parseTable();
-  
+  catName = items.get(0).getCatKey();
   axisLabels = new ArrayList(items.get(0).getQuantMap().keySet());
 }
 
@@ -106,17 +109,24 @@ void createGroups(){
   int xPos = PLOT_X;
   
   int i = 0;
+  int groupSize = colorMap.size();
+  print(groupSize);
   groups = new ArrayList();
   for (HashMap.Entry group : colorMap.entrySet()) {
+    if (groupSize <= 3){
+      heightAdjust += 2 * Y_STAGGER;
+      
+    }
     currentGroup = group.getKey().toString();
     currentColor = (int) group.getValue();
-    groups.add(new Group(xPos, height-heightAdjust, currentGroup, currentColor));
+    groups.add(new Group(xPos + BLOCK_WIDTH, height-heightAdjust, currentGroup, currentColor));
     
     heightAdjust += Y_STAGGER;
     if (i == 9) { // Hacky way of creating multiple columns
       xPos += 100;
       heightAdjust = 0;
-    }
+    } 
+    
     i++;
   }
 }
@@ -292,11 +302,24 @@ void applyAxisFilters() {
   }
 }
 
+void drawHeaders(){
+  fill(0);
+  textSize(16);
+  String about = "This displays data from " + PATH + 
+  "";
+  text(about, PLOT_X, height - HEADER_STAGGER + Y_STAGGER);
+  textSize(24);
+  text("About", PLOT_X, height - HEADER_STAGGER); 
+  text(catName, PLOT_X + BLOCK_WIDTH, height - HEADER_STAGGER);
+  text("Items", PLOT_X + 2 * BLOCK_WIDTH, height - HEADER_STAGGER);
+}
+
 
 // Draw Method
 
 void draw(){
   background(#FFFFFF);
+  drawHeaders();
   applyAxisFilters();
   for (Axis axis: axes) {
     axis.display();
