@@ -16,9 +16,13 @@ We also came up with the idea of including item names as a table in the lower ri
 
 During the static implementation we realized our design was somewhat cluttered and opted to stagger our axis labels and eliminate intermediate axis values.
 Once we were able to accomplish these primary interactions, we wanted to be able to rearrange our axes.  To do this we added a grabbable button to the unused space between staggered axis titles.
-
+After we got the basic functionalities working, we went after a sorted item display.  We ended up visualizing it as a single column of top 10 (or as many as are available given a filtering) items given their values of the first category axis (that is, the furthest to the left).  
+This allows the user to choose the sorting attribute by rearranging the desired axis into the first position.  Once the items are displayed in order, hovering then highlights the line corresponding to that item.
+![finalStaticVisualization](finalStaticViz.JPG)
 
 In developing the interactions we knew we also needed to be smart with our architecture design and created several classes for different aspects of the design.
-An Axis class holds code for visualizing and moving the axes and a QuantFilter class specifically to handle the click and drag filtering code.  A Group class holds a HashMap for a category key and color value, and also handles hover interactions. 
+An Axis class holds code for visualizing and moving the axes and a QuantFilter class specifically to handle the click and drag filtering code.  With a few exceptions (like release year), all axes start from a min value of 0 for a clear reference point.
+A Group class holds a HashMap for a category key and color value, and also handles hover interactions. 
 An Item class then holds onto all the data for a given row and a category label which corresponds to a Group hashmap key for easy color pairing.
 A Line class contains an Item and handles the visual component of the plotted axes positions as given by the Item data.
+To change the dataset, simple change the string variable path in PC_VIS.pde.

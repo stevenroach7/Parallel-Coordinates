@@ -22,7 +22,7 @@ int PLOT_X = 100;
 int PLOT_Y = 25;
 int PLOT_WIDTH = 1400;
 int Y_STAGGER = 25;
-int HEADER_STAGGER = 250;
+int HEADER_STAGGER = 260;
 int BLOCK_WIDTH = 300;
 
 
@@ -331,14 +331,15 @@ void drawHeaders(){
   String about = "This plot displays quantitative attributes of items from '" + PATH + 
   "' as parrallel coordinates. " + 
   "CLICK & DRAG the reorder icon at the bottom of each axis to swap its order with another axis. " + 
-  "Items names are displayed in sorted order, by whichever is arranged first (from left). " +
+  "Items names are displayed in sorted order, by whichever attribute axis is arranged first (from left). " +
   "CLICK & DRAG vertically along an axis to filter. " + 
   "HOVER over color group names to exclusively display that group.";
-  text(about, PLOT_X, height - HEADER_STAGGER + Y_STAGGER, BLOCK_WIDTH, HEADER_STAGGER - Y_STAGGER);
+  text(about, PLOT_X, height - HEADER_STAGGER + 0.5 * Y_STAGGER, BLOCK_WIDTH, HEADER_STAGGER - Y_STAGGER);
   textSize(24);
   text("About", PLOT_X, height - HEADER_STAGGER); 
   text(catName, PLOT_X + BLOCK_WIDTH, height - HEADER_STAGGER);
   text("Items", PLOT_X + 2 * BLOCK_WIDTH, height - HEADER_STAGGER);
+  textAlign(CENTER, CENTER);
 }
 
 void createDisplayedEntries() {
@@ -358,7 +359,7 @@ void createDisplayedEntries() {
        if (value1 == value2) {
           return 0;
        } 
-       return (value1 < value2) ? -1: 1;       
+       return (value1 > value2) ? -1: 1;       
     }
    });
    
