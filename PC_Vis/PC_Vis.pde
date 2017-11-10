@@ -15,7 +15,7 @@ ArrayList<TableEntry> displayedEntries;
 boolean isTableSortedAscending = true;
 
 // Constants
-String PATH = "../Data/cars-cleaned.tsv";
+String PATH = "../Data/cameras-cleaned.tsv";
 int AXIS_Y = 500;
 int AXIS_HEIGHT = 400;
 int PLOT_X = 100;
@@ -28,8 +28,8 @@ int BLOCK_WIDTH = 300;
 
 // Colors
 // Array of pregenerated distinct CIELab colors from https://stackoverflow.com/questions/309149/generate-distinctly-different-rgb-colors-in-graphs
-int[] distinctColors = {#9BC4E5,#310106,#04640D,#FEFB0A,#FB5514,#E115C0,#00587F,
-  #0BC582,#FEB8C8,#9E8317,#01190F,#847D81,#58018B,#B70639,#703B01,#118B8A,
+int[] distinctColors = {#9BC4E5,#310106,#04640D,#FB5514,#E115C0,#00587F,
+  #0BC582, #FEB8C8,#9E8317,#01190F,#847D81,#58018B,#B70639,#703B01,#118B8A,
   #4AFEFA,#FCB164,#796EE6,#000D2C,#53495F,#F95475,#61FC03,#5D9608,#DE98FD};
 
 void setup() {
@@ -226,14 +226,31 @@ void mouseMoved() {
    for (Group group: groups) {
       if (group.isPosInsideLabel(mouseX, mouseY)) {
          filterLinesByGroup(group.label);
-         createDisplayedEntries();
       }
+   }
+   createDisplayedEntries();
+   resetLineThickness();
+   for (TableEntry entry: displayedEntries) {
+     if (entry.isPosInsideLabel(mouseX, mouseY)) {
+       int entryItemID = entry.itemID;
+       for (Line line: lines) {
+         if (line.item.itemID == entryItemID) {
+           line.isThicker = true;
+         }
+       } 
+     }
    }
 }
 
 void resetLineGroupFilterBools() {
   for (Line line: lines) {
     line.groupFilterBool = true;
+  }
+}
+
+void resetLineThickness() {
+  for (Line line: lines) {
+    line.isThicker = false;
   }
 }
 
@@ -355,9 +372,9 @@ void createDisplayedEntries() {
    int numOptions = optionLines.size();
    for (int i = 0; i < min(10, numOptions); i++) { // Only display the first 10, or numOptions if it is less than 10
      Line optionLine = optionLines.get(i);
-     TableEntry entry = new TableEntry(BLOCK_WIDTH * 2, yPos, optionLine.item.nameValue, optionLine.colorHex);
+     TableEntry entry = new TableEntry(BLOCK_WIDTH * 2, yPos, optionLine.item.nameValue, optionLine.item.itemID, optionLine.colorHex);
      displayedEntries.add(entry);
-     yPos += 20;
+     yPos += 23;
    }
   }
 

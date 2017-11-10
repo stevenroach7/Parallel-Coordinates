@@ -2,13 +2,15 @@
 
 class Item {
   
+  int itemID;
   String nameKey;
   String nameValue;
   HashMap<String, Float> quantMap;
   String catKey;
   String catValue;
   
-  Item(String tempNameKey, String tempNameValue, HashMap<String, Float> tempQuantMap, String tempCatKey, String tempCatValue) {
+  Item(int tempItemID, String tempNameKey, String tempNameValue, HashMap<String, Float> tempQuantMap, String tempCatKey, String tempCatValue) {
+    itemID = tempItemID;
     nameKey = tempNameKey;
     nameValue = tempNameValue;
     quantMap = tempQuantMap;

@@ -7,12 +7,14 @@ class TableEntry {
   float x;
   float y;
   String label;
+  int itemID;
   int colorHex;
   
-  TableEntry(float tempX, float tempY, String tempLabel, int tempColorHex) {
+  TableEntry(float tempX, float tempY, String tempLabel, int tempItemID, int tempColorHex) {
     x = tempX;
     y = tempY;
     label = tempLabel;
+    itemID = tempItemID;
     colorHex = tempColorHex;
   }
   

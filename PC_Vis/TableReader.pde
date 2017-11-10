@@ -46,7 +46,7 @@ class TableReader {
         }
       }
       if (!nameValue.isEmpty()) {
-        items.add(new Item(nameKey, nameValue, quantMap, catKey, catValue));
+        items.add(new Item(i, nameKey, nameValue, quantMap, catKey, catValue));
       }
     }
     return items;

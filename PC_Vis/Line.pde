@@ -22,7 +22,7 @@ class Line {
     
     if (groupFilterBool && quantFilterBool) {
       stroke(colorHex);
-      strokeWeight(isThicker ? 3 : 1);
+      strokeWeight(isThicker ? 5 : 1);
       
       Position sourcePosition = positions.get(0);
       for (int i = 1; i < positions.size(); i++) { // Loop over all target positions
